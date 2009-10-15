@@ -22,8 +22,7 @@ module Stapler
 
         unless File.exists?(stapled_path)
           FileUtils.mkdir_p(File.dirname(stapled_path))
-          FileUtils.cp(asset_file_path(source), stapled_path)
-          Compressor.new(stapled_path).compress!
+          Compressor.new(asset_file_path(source), stapled_path).compress!
         end
 
         rewrite_asset_path_without_stapler(stapled_source)
