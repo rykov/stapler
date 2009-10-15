@@ -13,19 +13,21 @@ module Stapler
 
   private
     def rewrite_asset_path_with_stapler(source)
+
       unless ActionController::Base.perform_caching && source =~ /\.(js|css)$/
         rewrite_asset_path_without_stapler(source)
 
       else
+        @@stapler ||= Stapler::Stapler.new
         stapled_source = "#{StaplerRoot}#{source}"
         stapled_path = asset_file_path(stapled_source)
 
-        unless File.exists?(stapled_path)
-          FileUtils.mkdir_p(File.dirname(stapled_path))
-          Compressor.new(asset_file_path(source), stapled_path).compress!
+        if @@stapler.ready?(stapled_path)
+          rewrite_asset_path_without_stapler(stapled_source)
+        else
+          @@stapler.process(asset_file_path(source), stapled_path)
+          rewrite_asset_path_without_stapler(source)
         end
-
-        rewrite_asset_path_without_stapler(stapled_source)
       end
     end
 

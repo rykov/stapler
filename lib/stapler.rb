@@ -5,6 +5,7 @@
 $:.unshift File.dirname(__FILE__)
 
 require 'stapler/compressor'
+require 'stapler/stapler'
 require 'stapler/helper'
 
 ::ActionView::Helpers.send(:include, Stapler::Helper)
