@@ -18,7 +18,7 @@ module Stapler
         rewrite_asset_path_without_stapler(source)
 
       else
-        @@stapler ||= Stapler::Stapler.new
+        @@stapler ||= Stapler.new
         stapled_source = "#{StaplerRoot}#{source}"
         stapled_path = asset_file_path(stapled_source)
 
