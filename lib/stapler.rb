@@ -4,6 +4,7 @@
 
 $:.unshift File.dirname(__FILE__)
 
+require 'stapler/config'
 require 'stapler/compressor'
 require 'stapler/stapler'
 require 'stapler/helper'
