@@ -1,31 +1,46 @@
-= stapler 
-
-== DESCRIPTION:
+Stapler
+=======
 
 Stapler uses YUI Compressor to automatically compress cached assets in Rails
 
-== FEATURES/PROBLEMS:
 
-* Support both CSS and Javascript 
+Features/Problems
+-----------------
 
-== REQUIREMENTS:
+* Support both CSS and Javascript
+
+
+Requirements
+------------
 
 * yuicompressor gem
 
-== INSTALL:
+
+Install
+-------
 
 * gem install stapler
 
-== REFERENCES:
+
+References
+----------
 
   * YUI Compressor
-    http://developer.yahoo.com/yui/compressor/ 
+    http://developer.yahoo.com/yui/compressor/
 
-== LICENSE:
+
+Author
+------
+
+Michael Rykov :: missingfeature.com :: @michaelrykov
+
+
+License
+-------
 
 (The MIT License)
 
-Copyright (c) 2009  Michael Rykov 
+Copyright (c) 2009  Michael Rykov
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
