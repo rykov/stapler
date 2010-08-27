@@ -4,10 +4,13 @@
 
 $:.unshift File.dirname(__FILE__)
 
+require 'yuicompressor'
 require 'stapler/config'
 require 'stapler/compressor'
 require 'stapler/stapler'
 require 'stapler/helper'
 require 'stapler/middleware'
 
-::ActionView::Helpers.send(:include, Stapler::Helper)
+if defined?(::ActionView::Helpers)
+  ::ActionView::Helpers.send(:include, Stapler::Helper)
+end

@@ -10,11 +10,11 @@ Stapler uses YUI Compressor to automatically compress cached assets in Rails
 
 == REQUIREMENTS:
 
-* Java
+* yuicompressor gem
 
 == INSTALL:
 
-* script/plugin install git://github.com/rykov/stapler.git 
+* gem install stapler
 
 == REFERENCES:
 
