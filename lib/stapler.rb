@@ -8,5 +8,6 @@ require 'stapler/config'
 require 'stapler/compressor'
 require 'stapler/stapler'
 require 'stapler/helper'
+require 'stapler/middleware'
 
 ::ActionView::Helpers.send(:include, Stapler::Helper)
