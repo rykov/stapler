@@ -25,8 +25,8 @@ Install
 References
 ----------
 
-  * YUI Compressor
-    http://developer.yahoo.com/yui/compressor/
+  * YUI Compressor - <http://developer.yahoo.com/yui/compressor/>
+  * yuicompressor gem - <http://github.com/mjijackson/yuicompressor>
 
 
 Author
