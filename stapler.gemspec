@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name              = "stapler"
-  s.version           = "0.1.0"
+  s.version           = "0.2.0"
   s.date              = Time.now.strftime('%Y-%m-%d')
   s.summary           = "Dynamic asset compression for Rails"
   s.homepage          = "http://github.com/rykov/stapler"

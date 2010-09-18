@@ -10,11 +10,12 @@ module Stapler
     end
 
     def compress!
+      ensure_dir_exists!(@to_path)
       compress(@from_path, @to_path)
       logger.info("[Stapler] Compressed #{@from_path}")
     rescue => e
       logger.warn("[Stapler] Compression failure for #{@from_path}: #{e}")
-      FileUtil.cp(@from_path, @to_path)
+      FileUtils.cp(@from_path, @to_path)
     end
 
   protected
@@ -34,6 +35,11 @@ module Stapler
 
     def logger
       Rails.logger
+    end
+
+    def ensure_dir_exists!(out)
+      name = File.dirname(out)
+      FileUtils.mkdir_p(name) unless File.exists?(name)
     end
   end
 end

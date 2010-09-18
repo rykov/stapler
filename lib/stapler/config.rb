@@ -7,9 +7,17 @@
 module Stapler
   module Config
     WHITELIST = [%r{^/javascripts/.*\.js$}, %r{^/stylesheets/.*\.css$}]
+    PREFIX = "/stapler"
 
-    def self.stapleable?(source)
-      ActionController::Base.perform_caching && WHITELIST.any? { |re| source =~ re }
+    class << self
+      def stapleable?(source)
+        ActionController::Base.perform_caching &&
+        WHITELIST.any? { |re| source =~ re }
+      end
+
+      def stapled_path(source)
+        File.join(PREFIX, source)
+      end
     end
   end
 end

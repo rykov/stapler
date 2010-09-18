@@ -7,7 +7,6 @@ $:.unshift File.dirname(__FILE__)
 require 'yuicompressor'
 require 'stapler/config'
 require 'stapler/compressor'
-require 'stapler/stapler'
 require 'stapler/helper'
 require 'stapler/middleware'
 
