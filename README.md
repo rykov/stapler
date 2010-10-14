@@ -15,6 +15,12 @@ Requirements
 
 * yuicompressor gem
 
+TODO
+------------
+
+* logging
+* specs
+* pass 404 errors to the underlying app
 
 Install
 -------

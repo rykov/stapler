@@ -73,6 +73,7 @@ module Stapler
     def rewrite_env(env)
       out = env.dup
       REWRITE_KEYS.each do |key|
+        next unless out[key].is_a?(String)
         out[key] = out[key].gsub(@path_regex, "/\\1")
       end
       out
