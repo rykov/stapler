@@ -3,7 +3,7 @@ require 'rack/file'
 
 module Stapler
   class Middleware
-    FORBIDDEN_PATHS = %w(.. WEB-INF)
+    FORBIDDEN_PATHS = %w(.. WEB-INF META-INF)
     REWRITE_KEYS = %w(PATH_INFO REQUEST_PATH REQUEST_URI)
     DEFAULT_ROOT = defined?(Rails) ? Rails.public_path : 'public'
     DEFAULT_PREFIX = 'stapler'
@@ -36,7 +36,7 @@ module Stapler
 
   private
     def _call(env, asset_path)
-      return @rack_file.forbidden if forbidden_path?(asset_path)
+      return @rack_file.not_found if forbidden_path?(asset_path)
 
       # Call Rack::File
       response = @rack_file.call(rewrite_env(env))
