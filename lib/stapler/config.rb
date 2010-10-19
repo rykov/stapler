@@ -8,18 +8,27 @@ module Stapler
   module Config
     PREFIX = 'stapler'
     WHITELIST_DIR = %w(javascripts stylesheets)
-    WHITELIST_RE = [
-      %r{^/javascripts/.*\.js[$\?]},
-      %r{^/stylesheets/.*\.css[$\?]}
-    ]
+    WHITELIST_RE = Regexp.union(
+      %r{^/javascripts/.*\.js($|\?)},
+      %r{^/stylesheets/.*\.css($|\?)}
+    )
+
+    STAPLIZE_RE = Regexp.union(
+      %r{/javascripts/.*\.js($|\?)},
+      %r{/stylesheets/.*\.css($|\?)}
+    )
 
     class << self
       def stapleable_path?(source)
-        WHITELIST_RE.any? { |re| source =~ re }
+        source =~ WHITELIST_RE
       end
 
       def stapleable_dir?(dir)
         WHITELIST_DIR.include?(dir)
+      end
+
+      def staplize_url(url)
+        url.gsub(STAPLIZE_RE, "/#{PREFIX}\\0")
       end
     end
   end

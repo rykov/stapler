@@ -34,11 +34,9 @@ module Stapler
 
     private
       def compute_public_path_with_stapler(src, dir, ext = nil, include_host = true)
-        if include_host && Config.stapleable_dir?(dir)
-          dir = File.join(Config::PREFIX, dir)
-        end
-
-        compute_public_path_without_stapler(src, dir, ext, include_host)
+        staple = include_host && src !~ %r{^[-a-z]+://} && Config.stapleable_dir?(dir)
+        path = compute_public_path_without_stapler(src, dir, ext, include_host)
+        staple ? Config.staplize_url(path) : path
       end
     end
   end
