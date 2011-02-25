@@ -22,8 +22,11 @@ module Stapler
       @rack_file = Rack::File.new(asset_dir)
 
       # Should we write stapled results and where?
-      @perform_caching = opts[:perform_caching] || false
+      @perform_caching = opts[:cache_assets] || false
       @cache_dir = File.join(asset_dir, @path_prefix)
+
+      # Should we compress stapled results
+      @perform_compress = opts[:compress_assets] || false
     end
 
     def call(env)
@@ -61,9 +64,9 @@ module Stapler
       content = File.read(content.path) if content.is_a?(Rack::File)
 
       # Compress using the path as an indicator for format
-      if path =~ /\.css$/
+      if @perform_compress && path =~ /\.css$/
         YUICompressor.compress_css(content)
-      elsif path =~ /\.js$/
+      elsif @perform_compress && path =~ /\.js$/
         YUICompressor.compress_js(content, :munge => true)
       else
         content
