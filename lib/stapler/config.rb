@@ -5,7 +5,7 @@
 #++
 
 module Stapler
-  module Config
+  class Config
     PREFIX = 'stapler'
     WHITELIST_DIR = %w(javascripts stylesheets)
     WHITELIST_RE = Regexp.union(
@@ -30,6 +30,31 @@ module Stapler
       def staplize_url(url)
         url.gsub(STAPLIZE_RE, "/#{PREFIX}\\0")
       end
+    end
+
+    DEFAULT_ROOT = defined?(Rails) ? Rails.public_path : 'public'
+    DEFAULT_PREFIX = 'stapler'
+
+    attr_accessor :path_regex, :rack_file, :cache_dir,
+                  :perform_caching, :perform_compress
+
+    def initialize(opts = {})
+      # The root directory of where all the public files are stored
+      asset_dir    = opts[:public_path] || DEFAULT_ROOT
+
+      # The path prefix and correcsponding RegEx for stapled assets
+      path_prefix = opts[:path_prefix] || DEFAULT_PREFIX
+      @path_regex  = %r(^/#{path_prefix}/(.+)$)
+
+      # Rack::File will pull all the source files
+      @rack_file = Rack::File.new(asset_dir)
+
+      # Should we write stapled results and where?
+      @perform_caching = opts[:cache_assets] || false
+      @cache_dir = File.join(asset_dir, path_prefix)
+
+      # Should we compress stapled results
+      @perform_compress = opts[:compress_assets] || false
     end
   end
 end

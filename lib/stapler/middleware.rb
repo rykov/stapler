@@ -3,30 +3,10 @@ require 'rack/file'
 
 module Stapler
   class Middleware
-    FORBIDDEN_PATHS = %w(.. WEB-INF META-INF)
-    REWRITE_KEYS = %w(PATH_INFO REQUEST_PATH REQUEST_URI)
-    DEFAULT_ROOT = defined?(Rails) ? Rails.public_path : 'public'
-    DEFAULT_PREFIX = 'stapler'
-
     def initialize(app, opts = {})
       @app = app
-
-      # The root directory of where all the public files are stored
-      asset_dir    = opts[:public_path] || DEFAULT_ROOT
-
-      # The path prefix and correcsponding RegEx for stapled assets
-      @path_prefix = opts[:path_prefix] || DEFAULT_PREFIX
-      @path_regex  = %r(^/#{@path_prefix}/(.+)$)
-
-      # Rack::File will pull all the source files
-      @rack_file = Rack::File.new(asset_dir)
-
-      # Should we write stapled results and where?
-      @perform_caching = opts[:cache_assets] || false
-      @cache_dir = File.join(asset_dir, @path_prefix)
-
-      # Should we compress stapled results
-      @perform_compress = opts[:compress_assets] || false
+      @config = Stapler::Config.new(opts)
+      @path_regex = @config.path_regex
     end
 
     def call(env)
@@ -39,56 +19,42 @@ module Stapler
 
   private
     def _call(env, asset_path)
-      return @rack_file.not_found if forbidden_path?(asset_path)
-
-      # Call Rack::File
-      response = @rack_file.call(rewrite_env(env))
+      assets = Stapler::Asset.new(@config, asset_path)
+      response = assets.response(env)
 
       if response[0] == 200
-        # Compress the response body
-        output = compress(response[2], asset_path)
+        # Pull out the body
+        body = response[2]
+        body = File.read(body.path) if body.is_a?(Rack::File)
 
-        # Update response headers and body
-        response[1]['Content-Length'] = Rack::Utils.bytesize(output).to_s
-        response[2] = output
+        # Compress the body and update response
+        if @config.perform_compress
+          body = compress(body, asset_path)
+          response[1]['Content-Length'] = Rack::Utils.bytesize(body).to_s
+          response[2] = body
+        end
 
         # Save the compressed response for future calls
-        save_response(asset_path, output) if @perform_caching
+        save_response(asset_path, body) if @config.perform_caching
       end
 
       response
     end
 
     def compress(content, path)
-      # Convert from Rack::File to String
-      content = File.read(content.path) if content.is_a?(Rack::File)
-
       # Compress using the path as an indicator for format
-      if @perform_compress && path =~ /\.css$/
+      if path =~ /\.css$/
         YUICompressor.compress_css(content)
-      elsif @perform_compress && path =~ /\.js$/
+      elsif path =~ /\.js$/
         YUICompressor.compress_js(content, :munge => true)
       else
         content
       end
     end
 
-    def rewrite_env(env)
-      out = env.dup
-      REWRITE_KEYS.each do |key|
-        next unless out[key].is_a?(String)
-        out[key] = out[key].gsub(@path_regex, "/\\1")
-      end
-      out
-    end
-
-    def forbidden_path?(path)
-      FORBIDDEN_PATHS.any? { |fp| path.include?(fp) }
-    end
-
     def save_response(asset_path, content)
-      path = File.expand_path(asset_path, @cache_dir)
-      return unless path =~ /^#{@cache_dir}/
+      path = File.expand_path(asset_path, @config.cache_dir)
+      return unless path =~ /^#{@config.cache_dir}/
 
       # Ensure directory is present
       dir  = File.dirname(path)
