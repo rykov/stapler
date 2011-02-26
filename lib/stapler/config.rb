@@ -35,16 +35,17 @@ module Stapler
     DEFAULT_ROOT = defined?(Rails) ? Rails.public_path : 'public'
     DEFAULT_PREFIX = 'stapler'
 
-    attr_accessor :path_regex, :rack_file, :cache_dir,
-                  :perform_caching, :perform_compress
+    attr_accessor :path_regex, :bundle_regex, :rack_file, :cache_dir,
+                  :bundles, :perform_caching, :perform_compress
 
     def initialize(opts = {})
       # The root directory of where all the public files are stored
       asset_dir    = opts[:public_path] || DEFAULT_ROOT
 
       # The path prefix and correcsponding RegEx for stapled assets
-      path_prefix = opts[:path_prefix] || DEFAULT_PREFIX
-      @path_regex  = %r(^/#{path_prefix}/(.+)$)
+      path_prefix   = opts[:path_prefix] || DEFAULT_PREFIX
+      @path_regex   = %r(^/#{path_prefix}/(.+)$)
+      @bundle_regex = %r(^/#{path_prefix}/bundle/(.+)$)
 
       # Rack::File will pull all the source files
       @rack_file = Rack::File.new(asset_dir)
@@ -55,6 +56,9 @@ module Stapler
 
       # Should we compress stapled results
       @perform_compress = opts[:compress_assets] || false
+
+      # Bundle configuration
+      @bundles = opts[:bundles].is_a?(Hash) ? opts[:bundles] : {}
     end
   end
 end

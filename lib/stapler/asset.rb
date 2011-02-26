@@ -29,7 +29,7 @@ module Stapler
       out = env.dup
       REWRITE_KEYS.each do |key|
         next unless out[key].is_a?(String)
-        out[key] = out[key].gsub(@config.path_regex, "/\\1")
+        out[key] = out[key].gsub(@config.path_regex, @path)
       end
       out
     end
