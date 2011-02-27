@@ -9,7 +9,7 @@ module Stapler
 
     def initialize(config, path)
       @config = config
-      @path = path
+      @path = Utils.groom_path(path)
     end
 
     def response(env)

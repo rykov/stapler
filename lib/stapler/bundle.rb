@@ -40,12 +40,9 @@ module Stapler
 
   private
     def bundle_paths(bundle)
-      if @config.bundles.key?(bundle)
-        @config.bundles[bundle]
-      else
-        parts = bundle.split(/[\.\/]/)
-        Utils.marshal_decode(parts.first)
-      end
+      # Ignore extension and asset id, etc
+      key, signature = bundle.split(/[\.\/]/, 3)
+      Utils.url_decode_with_signature(key, signature)
     rescue Utils::BadString
       nil
     end

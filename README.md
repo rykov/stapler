@@ -18,6 +18,8 @@ Requirements
 TODO
 ------------
 
+* warnings if the bundle URL is longer than 2048 chars (for IE)
+* make sure that Config.secret is not a class variable
 * logging
 * specs
 * pass 404 errors to the underlying app

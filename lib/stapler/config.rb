@@ -36,7 +36,7 @@ module Stapler
     DEFAULT_PREFIX = 'stapler'
 
     attr_accessor :path_regex, :bundle_regex, :rack_file, :cache_dir,
-                  :bundles, :perform_caching, :perform_compress
+                  :perform_caching, :perform_compress
 
     def initialize(opts = {})
       # The root directory of where all the public files are stored
@@ -57,8 +57,13 @@ module Stapler
       # Should we compress stapled results
       @perform_compress = opts[:compress_assets] || false
 
-      # Bundle configuration
-      @bundles = opts[:bundles].is_a?(Hash) ? opts[:bundles] : {}
+      # Bundle URL signature secret
+      @@secret = opts[:secret] || 'nakedemperor'
+    end
+
+    # FIXME: This should not be class variable
+    def self.secret
+      @@secret
     end
   end
 end
