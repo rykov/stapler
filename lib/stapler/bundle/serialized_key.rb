@@ -5,11 +5,12 @@
 module Stapler
   class Bundle
     class SerializedKey; end
+    @@asset_id = Time.now.to_i.to_s
 
     class << SerializedKey
       def to_key(paths)
         key = Utils.url_encode(paths.map { |a| Utils.groom_path(a) })
-        File.join(key, signature(key), asset_id)
+        File.join(key, signature(key), @@asset_id)
       end
 
       def to_paths(bundle)
@@ -31,10 +32,6 @@ module Stapler
         else
           raise BadString, "Invalid signature"
         end
-      end
-
-      def asset_id
-        @@asset_id ||= Time.now.to_i.to_s
       end
     end
   end
