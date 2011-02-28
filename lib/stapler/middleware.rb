@@ -43,8 +43,8 @@ module Stapler
         response[1]['Content-Length'] = Rack::Utils.bytesize(body).to_s
         response[2] = body
 
-        # Save the compressed response for future calls
-        save_response(asset_path, body) if @config.perform_caching
+        # Add cache headers for Rack::Cache, etc
+        response[1].merge!(cache_headers(asset_path))
       end
 
       response
@@ -61,16 +61,10 @@ module Stapler
       end
     end
 
-    def save_response(asset_path, content)
-      path = File.expand_path(asset_path, @config.cache_dir)
-      return unless path =~ /^#{@config.cache_dir}/
-
-      # Ensure directory is present
-      dir  = File.dirname(path)
-      FileUtils.mkdir_p(dir) unless File.exists?(dir)
-
-      # Write response
-      File.open(path, 'w') { |f| f.write(content) }
+    def cache_headers(path)
+      duration = @config.perform_caching ? 31536000 : 0
+      { "Cache-Control" => "public, max-age=#{duration.to_s}",
+        "ETag" => %("#{Digest::SHA1.hexdigest(path)}") }
     end
   end
 end

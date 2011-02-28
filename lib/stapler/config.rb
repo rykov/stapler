@@ -35,7 +35,7 @@ module Stapler
     DEFAULT_ROOT = defined?(Rails) ? Rails.public_path : 'public'
     DEFAULT_PREFIX = 'stapler'
 
-    attr_accessor :path_regex, :bundle_regex, :rack_file, :cache_dir,
+    attr_accessor :path_regex, :bundle_regex, :rack_file,
                   :perform_caching, :perform_compress
 
     def initialize(opts = {})
@@ -52,7 +52,6 @@ module Stapler
 
       # Should we write stapled results and where?
       @perform_caching = opts[:cache_assets] || false
-      @cache_dir = File.join(asset_dir, path_prefix)
 
       # Should we compress stapled results
       @perform_compress = opts[:compress_assets] || false
