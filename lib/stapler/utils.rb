@@ -47,21 +47,7 @@ module Stapler
       # Convert a list of assets into an URL
       # Note: Rails helpers adds the appropriate extension
       def bundle_path(assets)
-        key = url_encode(assets.map { |a| groom_path(a) })
-        File.join('/stapler/bundle/', key, signature(key))
-      end
-
-      # Security signature for URLs #
-      def signature(key)
-        Digest::SHA1.hexdigest("#{key}#{Config.secret}")[0...8]
-      end
-
-      def url_decode_with_signature(key, key_signature)
-        if signature(key.to_s) == key_signature.to_s
-          url_decode(key)
-        else
-          raise BadString, "Invalid signature"
-        end
+        File.join('/stapler/bundle/', Bundle::Key.to_key(assets))
       end
     end
   end

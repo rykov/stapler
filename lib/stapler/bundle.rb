@@ -8,7 +8,7 @@ module Stapler
   class Bundle
     def initialize(config, bundle)
       @config = config
-      @paths = bundle_paths(bundle.to_s)
+      @paths = Key.to_paths(bundle.to_s)
     end
 
     # Collect asset responses and build the collective response
@@ -36,15 +36,6 @@ module Stapler
           sum
         end
       end
-    end
-
-  private
-    def bundle_paths(bundle)
-      # Ignore extension and asset id, etc
-      key, signature = bundle.split(/[\.\/]/, 3)
-      Utils.url_decode_with_signature(key, signature)
-    rescue Utils::BadString
-      nil
     end
   end
 end
