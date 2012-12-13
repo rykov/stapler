@@ -1,6 +1,8 @@
 Stapler
 =======
 
+[![Gem Version](https://fury-badge.herokuapp.com/rb/stapler.png)](http://badge.fury.io/rb/stapler)
+
 Stapler uses YUI Compressor to automatically compress cached assets in Rails
 
 
